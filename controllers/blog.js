@@ -62,3 +62,48 @@ module.exports.filterblogs = async (req, res) => {
     return res.status(500).json({ msg: "Internal Server Error" });
     }
 }
+
+module.exports.update = async (req, res) => {
+    try{
+        let blog = await Blog.findById(req.params.id);
+        console.log("blog", blog);
+        if(req.body.content){
+            blog.content = req.body.content;
+        }
+        if(req.body.title){
+            blog.title = req.body.title;
+        }
+        blog.save();
+        console.log("blog", blog);
+        return res.status(200).json({
+            message:"Here is your Updated Blog!",
+            blog,
+        })
+    }catch(err){
+    console.log("error in creating blog", err);
+    return res.status(500).json({ msg: "Internal Server Error" });  
+    }
+}
+
+module.exports.delete = async (req, res) => {
+    try{
+       const blog = await Blog.findById(req.params.id);
+       console.log("blog", blog);
+       console.log("user", req.user);
+       let delBlog;
+       if(req.user.role == "admin" || req.user.id == blog.author){
+            delBlog = await Blog.findByIdAndDelete(req.params.id);
+            return res.status(200).json({
+                message:"Blg deleted Successfully!",
+                delBlog,
+            })
+       }else{
+            return res.status(300).json({
+            message:"You cannot delete it!",
+        }) 
+       }
+    }catch(err){
+    console.log("error in creating blog", err);
+    return res.status(500).json({ msg: "Internal Server Error" });  
+    }
+}
