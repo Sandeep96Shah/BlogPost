@@ -5,11 +5,13 @@ const app = express();
 
 const db = require('./config/mongoose');
 
+const passport = require("passport");
+const jwt = require('./config/passwordJWT');
+
+app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-app.get('/', (req,res) => {
-    return res.send('<h1>Welcome</h1>');
-})
+app.use('/', require('./routes/index'));
 
 app.listen(port, (err) => {
     if (err) {
