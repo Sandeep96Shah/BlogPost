@@ -9,4 +9,8 @@ Router.get('/all', passport.authenticate('jwt', {session:false}), blogController
 
 Router.post('/create', passport.authenticate('jwt', {session:false}), blogController.create);
 
+Router.get('/view/:id', passport.authenticate('jwt', {session:false}), blogController.view);
+
+Router.get('/filter/:title', passport.authenticate('jwt', {session:false}), blogController.filterblogs);
+
 module.exports = Router;
